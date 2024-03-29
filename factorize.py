@@ -1,11 +1,58 @@
-from multiprocessing import Pool, cpu_count
+# from multiprocessing import Pool, cpu_count
+# import time
+
+# start = time.perf_counter()
+
+# def factorize_single(number):
+#     return [i for i in range(1, number + 1) if number % i == 0]
+
+# def factorize(*numbers):
+#     with Pool(cpu_count()) as pool:
+#         result = pool.map(factorize_single, numbers)
+#         return result
+
+# finish = time.perf_counter()
+
+# print(f"Running time for 'Pool-multiprocessing' is {round(finish-start, 2)} second(s)")
+
+"""-------------------------------------------"""
+from threading import Thread
+import time
+
+start = time.perf_counter()
 
 def factorize_single(number):
     return [i for i in range(1, number + 1) if number % i == 0]
 
+class FactorizeThread(Thread):
+    def __init__(self, number, result_list):
+        super().__init__()
+        self.number = number
+        self.result_list = result_list
+
+    def run(self):
+        self.result_list.extend(factorize_single(self.number))
+
 def factorize(*numbers):
-    with Pool(cpu_count()) as pool:
-        return pool.map(factorize_single, numbers)
+    result = []
+    threads = []
+
+    for item in numbers:
+        result_list = []
+        th = FactorizeThread(item, result_list)
+        th.start()
+        threads.append((th, result_list))
+
+    for thread, result_list in threads:
+        thread.join()
+        result.append(result_list)
+
+    return result
+
+finish = time.perf_counter()
+
+
+print(f"Running time for 'Threads' is {round(finish-start, 2)} second(s)")
 
 
 a, b, c, d = factorize(128, 255, 99999, 10651060)
