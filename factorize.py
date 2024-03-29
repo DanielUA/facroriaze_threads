@@ -1,19 +1,19 @@
-# from multiprocessing import Pool, cpu_count
-# import time
+from multiprocessing import Pool, cpu_count
+import time
 
-# start = time.perf_counter()
+start = time.perf_counter()
 
-# def factorize_single(number):
-#     return [i for i in range(1, number + 1) if number % i == 0]
+def factorize_single(number):
+    return [i for i in range(1, number + 1) if number % i == 0]
 
-# def factorize(*numbers):
-#     with Pool(cpu_count()) as pool:
-#         result = pool.map(factorize_single, numbers)
-#         return result
+def factorize(*numbers):
+    with Pool(cpu_count()) as pool:
+        result = pool.map(factorize_single, numbers)
+        return result
 
-# finish = time.perf_counter()
+finish = time.perf_counter()
 
-# print(f"Running time for 'Pool-multiprocessing' is {round(finish-start, 2)} second(s)")
+print(f"Running time for 'Pool-multiprocessing' is {round(finish-start)} second(s)")
 
 """-------------------------------------------"""
 from threading import Thread
@@ -52,12 +52,13 @@ def factorize(*numbers):
 finish = time.perf_counter()
 
 
-print(f"Running time for 'Threads' is {round(finish-start, 2)} second(s)")
+print(f"Running time for 'Threads' is {round(finish-start)} second(s)")
 
 
-a, b, c, d = factorize(128, 255, 99999, 10651060)
+a, b, c, d, e = factorize(128, 255, 99999, 10651060, 21302120)
 
 assert a == [1, 2, 4, 8, 16, 32, 64, 128]
 assert b == [1, 3, 5, 15, 17, 51, 85, 255]
 assert c == [1, 3, 9, 41, 123, 271, 369, 813, 2439, 11111, 33333, 99999]
 assert d == [1, 2, 4, 5, 7, 10, 14, 20, 28, 35, 70, 140, 76079, 152158, 304316, 380395, 532553, 760790, 1065106, 1521580, 2130212, 2662765, 5325530, 10651060]
+assert e == [1, 2, 4, 5, 7, 8, 10, 14, 20, 28, 35, 40, 56, 70, 140, 280, 76079, 152158, 304316, 380395, 532553, 608632, 760790, 1065106, 1521580, 2130212, 2662765, 3043160, 4260424, 5325530, 10651060, 21302120]
